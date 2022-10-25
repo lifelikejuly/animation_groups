@@ -1,3 +1,4 @@
+library flutter_animation_groups;
 
 export 'animation_group/widget/animation_group_widget.dart';
 export 'animation_group/parameter/animation_group.dart';
