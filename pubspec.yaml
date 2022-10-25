@@ -1,15 +1,17 @@
 name: animation_groups
-description: A new Flutter project.
+description: A Flutter Animation Library.
 version: 0.0.1
-homepage:
+homepage: https://github.com/yuhaocan/animation_groups
 
 environment:
   sdk: '>=2.18.2 <3.0.0'
   flutter: ">=1.17.0"
 
+
 dependencies:
   flutter:
     sdk: flutter
+  vector_math: 2.1.2
 
 dev_dependencies:
   flutter_test:

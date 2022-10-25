@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:vector_math/vector_math_64.dart';
 
+
 import '../parameter/animation_group.dart';
 
 class AnimationManager {

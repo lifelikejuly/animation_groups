@@ -61,7 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             GestureDetector(
               child: const Text(
-                'You have pushed the button this many times:',
+                'touch into the demo',
               ),
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(builder: (context) {
