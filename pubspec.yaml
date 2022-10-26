@@ -1,5 +1,6 @@
 name: animation_groups
-description: A Flutter Animation Library.
+description: This is Flutter Animation Library can easy to use Animation.
+  Only need create AnimationGroup and add AnimationPart information to make Animation.
 version: 0.0.3
 homepage: https://github.com/yuhaocan/animation_groups
 

@@ -1,8 +1,14 @@
 import 'package:flutter/widgets.dart';
+
 import '../parameter/animation_group.dart';
 import '../manager/animation_manager.dart';
 import '../manager/animation_driver.dart';
 
+/// Flutter widget that can easy create animationGroups.
+///
+/// [child] is need do animation widget.
+/// [animationGroups] is all animation.
+/// [animationDriver] like animationController,can do forward or reverse animation.
 class AnimationGroupWidget extends StatefulWidget {
   final Widget child;
   final List<AbsAnimationGroup> animationGroups;
@@ -41,27 +47,27 @@ class _AnimationGroupWidgetState extends State<AnimationGroupWidget>
     _animationController.duration = _animationManager.duration;
     animationDriver.reverseFunc = () {
       _animationManager.isReverse(true);
-      _animationController?.reverse(from: animationDriver.from);
+      _animationController.reverse(from: animationDriver.from);
     };
 
     animationDriver.forwardFunc = () {
       _animationManager.isReverse(false);
-      _animationController?.forward(from: animationDriver.from);
+      _animationController.forward(from: animationDriver.from);
     };
     animationDriver.resetFunc = () {
       _animationController.reset();
-      _animationManager?.reset();
+      _animationManager.reset();
     };
     voidCallback = (){
       double value = _animationController.value;
       if(value == 1.0 && !animationDriver.isReverse){
 
         if (animationDriver.isRepeat) {
-          animationDriver?.forwardFunc!();
+          animationDriver.forwardFunc!();
         }
       }else if(value == 0.0 && animationDriver.isReverse){
         if (animationDriver.isRepeat) {
-          animationDriver?.reverseFunc!();
+          animationDriver.reverseFunc!();
         }
       }
     };
@@ -71,8 +77,8 @@ class _AnimationGroupWidgetState extends State<AnimationGroupWidget>
 
   @override
   void dispose() {
-    _animationController?.removeListener(voidCallback);
-    _animationController?.dispose();
+    _animationController.removeListener(voidCallback);
+    _animationController.dispose();
     super.dispose();
   }
 

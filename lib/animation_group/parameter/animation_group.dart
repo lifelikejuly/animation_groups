@@ -1,7 +1,7 @@
 import 'package:vector_math/vector_math_64.dart';
 import 'animation_part.dart';
 
-// 动画组
+/// 动画组
 abstract class AbsAnimationGroup {
   late List<AnimationPart> _parts;
   late Vector3 _currentXYZ;
@@ -24,7 +24,7 @@ abstract class AbsAnimationGroup {
   Vector3 _initXYZ();
 
   AbsAnimationGroup({required List<AnimationPart> parts})
-      : assert((parts?.isNotEmpty ?? false) && parts.length > 1,
+      : assert(parts.isNotEmpty && parts.length > 1,
             "AnimationPart list must be not null and size > 1") {
     _currentXYZ = _initXYZ();
     //动画序列调整
@@ -144,6 +144,7 @@ abstract class AbsAnimationGroup {
   }
 }
 
+/// [TransitionAnimationGroup] can do transition Animation
 class TransitionAnimationGroup extends AbsAnimationGroup {
   TransitionAnimationGroup({required List<AnimationPart> parts})
       : super(parts: parts);
@@ -165,6 +166,7 @@ class TransitionAnimationGroup extends AbsAnimationGroup {
   }
 }
 
+/// [ScaleAnimationGroup] can do scale Animation
 class ScaleAnimationGroup extends AbsAnimationGroup {
   ScaleAnimationGroup({required List<AnimationPart> parts})
       : super(parts: parts);
@@ -186,6 +188,7 @@ class ScaleAnimationGroup extends AbsAnimationGroup {
   }
 }
 
+/// [RotationAnimationGroup] can do rotation Animation
 class RotationAnimationGroup extends AbsAnimationGroup {
   RotationAnimationGroup({required List<AnimationPart> parts})
       : super(parts: parts);
@@ -213,7 +216,8 @@ class RotationAnimationGroup extends AbsAnimationGroup {
   }
 }
 
-class OpacityAnimationGroup extends AbsAnimationGroup{
+/// [OpacityAnimationGroup] can do opacity Animation
+class OpacityAnimationGroup extends AbsAnimationGroup {
   OpacityAnimationGroup({required List<AnimationPart> parts})
       : super(parts: parts);
 
@@ -232,6 +236,4 @@ class OpacityAnimationGroup extends AbsAnimationGroup{
   Matrix4 _last(Matrix4 matrix4) {
     return matrix4..setEntry(0, 0, _currentXYZ.x);
   }
-
-
 }

@@ -1,9 +1,13 @@
-import 'dart:ffi';
 
 import 'package:flutter/widgets.dart';
 import 'package:vector_math/vector_math_64.dart';
 
+/// [AnimationPart] is moment animation information
+/// it hava two constructor to create [AnimationPart.add] or [AnimationPart]
+/// [AnimationPart.add] is depends before AnimationPart to do.
+/// [AnimationPart] is respect itself moment information.
 class AnimationPart {
+
   int moment;
   Vector3 xyz;
   Vector3 xyzAdd;
