@@ -1,6 +1,6 @@
 name: animation_groups
 description: A Flutter Animation Library.
-version: 0.0.2
+version: 0.0.3
 homepage: https://github.com/yuhaocan/animation_groups
 
 environment:

@@ -83,7 +83,7 @@ class _AnimationGroupWidgetState extends State<AnimationGroupWidget>
       child: widget.child,
       builder: (context, child) {
         return Opacity(
-          opacity: 1.0,
+          opacity: _animationManager.calculateOpacity(_getMilliseconds()),
           child: Transform(
             transform: _animationManager.calculateMatrix(_getMilliseconds()),
             alignment: Alignment.center,

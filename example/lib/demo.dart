@@ -27,7 +27,7 @@ class _AnimationDemoState extends State<AnimationDemo> {
       appBar: AppBar(
         title: Text("demo"),
       ),
-      body:  Stack(
+      body: Stack(
         children: [
           Positioned(
             top: 0,
@@ -36,45 +36,46 @@ class _AnimationDemoState extends State<AnimationDemo> {
               animationDriver: animationDriver,
               animationGroups: [
                 TransitionAnimationGroup(parts: [
-                  AnimationPart(moment: 0, x: 0, y: 0),
-                  AnimationPart(moment: 1000, x: 100, y: 100,curve: Curves.easeIn),
-                  AnimationPart(moment: 2000, x: 100, y: 200,curve: Curves.easeIn),
-                  AnimationPart(moment: 3000, x: 200, y: 200),
+                  AnimationPart(moment: 0),
+                  AnimationPart(
+                      moment: 1000, x: 100, y: 100, curve: Curves.easeIn),
+                  AnimationPart(moment: 2000, y: 200, curve: Curves.easeIn),
+                  AnimationPart(moment: 3000, x: 200),
                   AnimationPart(moment: 4000, x: 300, y: 300),
                 ]),
-
-                // TransitionAnimationGroup(parts: [
-                //   AnimationPart(moment: 5000, x: 300, y: 300),
-                //   AnimationPart(moment: 6000, x: 200, y: 200),
-                // ]),
-
-                // ScaleAnimationGroup(parts: [
-                //   AnimationPart(moment: 1000, x: 1.0, y: 1.0,z: 1.0),
-                //   AnimationPart(moment: 2000, x: 1.5, y: 1.5,z: 1.0,curve: Curves.easeIn),
-                //   AnimationPart(moment: 3000, x: 1.0, y: 1.0,z: 1.0),
-                // ]),
-                //
-                // ScaleAnimationGroup(parts: [
-                //   AnimationPart(moment: 4000, x: 1.0, y: 1.0,z: 1.0,curve: Curves.bounceIn),
-                //   AnimationPart(moment: 5000, x: 2.0, y: 2.0,z: 1.0),
-                // ]),
-
-                RotationAnimationGroup(
-                    parts: [
-                      AnimationPart(moment: 4000, x: 0, y: 0,z: 0,),
-                      AnimationPart(moment: 5000, x: 0, y: 0,z: pi,),
-                    ]
-                ),
+                TransitionAnimationGroup(parts: [
+                  AnimationPart(moment: 5000, x: 300, y: 300),
+                  AnimationPart(moment: 6000, x: 200, y: 200),
+                  AnimationPart.add(moment: 7000,x: -300),
+                ]),
+                ScaleAnimationGroup(parts: [
+                  AnimationPart(moment: 1000),
+                  AnimationPart(
+                      moment: 2000, x: 1.5, y: 1.5, curve: Curves.easeIn),
+                  AnimationPart(moment: 3000, x: 1.0, y: 1.0),
+                ]),
+                ScaleAnimationGroup(parts: [
+                  AnimationPart(moment: 4000, curve: Curves.bounceIn),
+                  AnimationPart(moment: 5000, x: 2.0, y: 2.0),
+                ]),
+                RotationAnimationGroup(parts: [
+                  AnimationPart(moment: 4000),
+                  AnimationPart(moment: 5000, z: pi),
+                ]),
+                OpacityAnimationGroup(parts: [
+                  AnimationPart(moment: 1000),
+                  AnimationPart(moment: 2000,x: 0.5),
+                  AnimationPart(moment: 3000,x: 1.0),
+                ])
               ],
               child: Container(
-                child: Text("xxxxx"),
+                child: const Text("xxxxx"),
                 width: 20,
                 height: 20,
                 color: Colors.blue,
               ),
             ),
           ),
-
           Positioned(
               bottom: 0,
               child: Row(

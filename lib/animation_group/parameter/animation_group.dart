@@ -4,7 +4,7 @@ import 'animation_part.dart';
 // 动画组
 abstract class AbsAnimationGroup {
   late List<AnimationPart> _parts;
-  Vector3 _currentXYZ = Vector3.all(0.0);
+  late Vector3 _currentXYZ;
   late int _duration;
   late int _startMoment;
   late int _endMoment;
@@ -17,14 +17,39 @@ abstract class AbsAnimationGroup {
 
   Vector3 get lastXYZ => _currentXYZ;
 
+  Matrix4 _last(Matrix4 matrix4);
+
+  Matrix4 _calculate(Matrix4 matrix4, double t);
+
+  Vector3 _initXYZ();
+
   AbsAnimationGroup({required List<AnimationPart> parts})
       : assert((parts?.isNotEmpty ?? false) && parts.length > 1,
             "AnimationPart list must be not null and size > 1") {
+    _currentXYZ = _initXYZ();
     //动画序列调整
     _parts = parts;
     _parts.sort((a, b) {
       return a.moment.compareTo(b.moment);
     });
+    // 第一个起步值是否存在
+
+    // 初始化值设置
+    AnimationPart tempPart = AnimationPart(moment: 0);
+    tempPart.xyz = _currentXYZ;
+    Iterator<AnimationPart> iterator = _parts.iterator;
+    while (iterator.moveNext()) {
+      AnimationPart animationPart = iterator.current;
+      if (animationPart.isAddPart) {
+        animationPart.xyz = tempPart.xyz + animationPart.xyzAdd;
+      } else {
+        Vector3? vector3 = animationPart.xyz;
+        if (vector3!.x == double.infinity) vector3.x = tempPart.xyz!.x;
+        if (vector3!.y == double.infinity) vector3.y = tempPart.xyz!.y;
+        if (vector3!.z == double.infinity) vector3.z = tempPart.xyz!.z;
+      }
+      tempPart = animationPart;
+    }
     //计算得到时长
     _duration = _parts.last.moment;
     _startMoment = _parts.first.moment;
@@ -101,10 +126,6 @@ abstract class AbsAnimationGroup {
     return _endMoment < time;
   }
 
-  Matrix4 _last(Matrix4 matrix4);
-
-  Matrix4 _calculate(Matrix4 matrix4, double t);
-
   Matrix4 getCurrentMatrix4(Matrix4 matrix4, double t) {
     if (_overTime(t)) matrix4 = _last(matrix4);
     if (_inTime(t)) matrix4 = _calculate(matrix4, t);
@@ -137,6 +158,11 @@ class TransitionAnimationGroup extends AbsAnimationGroup {
   Matrix4 _last(Matrix4 matrix4) {
     return matrix4..setTranslation(_currentXYZ);
   }
+
+  @override
+  Vector3 _initXYZ() {
+    return Vector3.all(0.0);
+  }
 }
 
 class ScaleAnimationGroup extends AbsAnimationGroup {
@@ -152,6 +178,11 @@ class ScaleAnimationGroup extends AbsAnimationGroup {
   @override
   Matrix4 _last(Matrix4 matrix4) {
     return matrix4..scale(_currentXYZ);
+  }
+
+  @override
+  Vector3 _initXYZ() {
+    return Vector3.all(1.0);
   }
 }
 
@@ -175,57 +206,32 @@ class RotationAnimationGroup extends AbsAnimationGroup {
     matrix4.rotateZ(_currentXYZ.z);
     return matrix4;
   }
+
+  @override
+  Vector3 _initXYZ() {
+    return Vector3.all(0.0);
+  }
 }
 
-// abstract class AbsAnimationGroups<T extends AbsAnimationGroup> {
-//   List<T> groups;
-//   Duration duration;
-//   Matrix4 matrix4 = Matrix4.identity();
-//
-//   AbsAnimationGroups(this.groups) {
-//     int maxDuration = 0;
-//     for (AbsAnimationGroup group in groups) {
-//       maxDuration = max(group.duration, maxDuration);
-//     }
-//     duration = Duration(milliseconds: maxDuration);
-//   }
-//
-//   Matrix4 calculateMatrix(double millTime) {
-//     Matrix4 outPutMatrix4 = Matrix4.identity();
-//     for (AbsAnimationGroup group in groups) {
-//       if (group.overTime(millTime)) outPutMatrix4 = group.last(outPutMatrix4);
-//       if (group.inTime(millTime))
-//         outPutMatrix4 = group.calculate(outPutMatrix4, millTime);
-//     }
-//     return outPutMatrix4;
-//   }
-// }
-//
-// class TransitionAnimationGroups
-//     extends AbsAnimationGroups<TransitionAnimationGroup> {
-//   TransitionAnimationGroups({@required List<TransitionAnimationGroup> groups})
-//       : super(groups);
-// }
+class OpacityAnimationGroup extends AbsAnimationGroup{
+  OpacityAnimationGroup({required List<AnimationPart> parts})
+      : super(parts: parts);
 
-// abstract class AbsAnimationGroups {
-//   List<AbsAnimationParts> groups;
-//   Duration duration;
-//   Matrix4 matrix4 = Matrix4.identity();
-//
-//   AbsAnimationGroups(this.groups) {
-//     int maxDuration = 0;
-//     for (AbsAnimationParts group in groups) {
-//       maxDuration = max(group.duration, maxDuration);
-//     }
-//     duration = Duration(milliseconds: maxDuration);
-//   }
-//
-//   Matrix4 calculateMatrix(double millTime) {
-//     Matrix4 outPutMatrix4 = Matrix4.identity();
-//     for (AbsAnimationParts group in groups) {
-//       if (group.inTime(millTime))
-//         outPutMatrix4 = group.calculate(outPutMatrix4, millTime);
-//     }
-//     return outPutMatrix4;
-//   }
-// }
+  @override
+  Matrix4 _calculate(Matrix4 matrix4, double t) {
+    Vector3 xyz = _getCurrentValue(t);
+    return matrix4..setEntry(0, 0, xyz.x.clamp(0.0, 1.0));
+  }
+
+  @override
+  Vector3 _initXYZ() {
+    return Vector3.all(1.0);
+  }
+
+  @override
+  Matrix4 _last(Matrix4 matrix4) {
+    return matrix4..setEntry(0, 0, _currentXYZ.x);
+  }
+
+
+}
