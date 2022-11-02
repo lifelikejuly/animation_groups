@@ -87,6 +87,10 @@ class _AnimationDemoState2 extends State<ExpandAnimationDemo>
   }
 }
 
+/// 画圆公式
+/// https://xiaochaowei.com/2022/07/20/BezierCurveFittedAnyCurve/
+///
+///
 class CircleTransitionAnimationGroup extends AnimationGroup {
   CircleTransitionAnimationGroup({required List<AnimationPart> parts})
       : super(parts: parts);
