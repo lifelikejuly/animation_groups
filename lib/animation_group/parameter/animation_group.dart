@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:vector_math/vector_math_64.dart';
 import 'animation_part.dart';
 
@@ -22,6 +24,8 @@ abstract class AbsAnimationGroup {
   Matrix4 _calculate(Matrix4 matrix4, double t);
 
   Vector3 _initXYZ();
+
+  String getAnimationType();
 
   AbsAnimationGroup({required List<AnimationPart> parts})
       : assert(parts.isNotEmpty && parts.length > 1,
@@ -142,7 +146,50 @@ abstract class AbsAnimationGroup {
     _currentXYZ =
         reverse ? _getCurrentValue(_endMoment.toDouble()) : Vector3.all(0.0);
   }
+
 }
+
+abstract class AnimationGroup extends AbsAnimationGroup{
+  AnimationGroup({required super.parts});
+
+  Matrix4 calculateMatrix4(Matrix4 matrix4,Vector3 xyz);
+
+  Matrix4 last(Matrix4 matrix4,Vector3 xyz);
+
+  Vector3 initXYZ();
+  Vector3 calculatePartXYZ(double t, AnimationPart right, AnimationPart left);
+
+  String animationType();
+
+  @override
+  Matrix4 _calculate(Matrix4 matrix4, double t) {
+    Vector3 xyz = _getCurrentValue(t);
+    return calculateMatrix4(matrix4,xyz);
+  }
+
+  @override
+  Matrix4 _last(Matrix4 matrix4) {
+    return last(matrix4, _currentXYZ);
+  }
+
+  @override
+  Vector3 _initXYZ() {
+    return initXYZ();
+  }
+
+  @override
+  Vector3 _calculatePartXYZ(double t, AnimationPart right, AnimationPart left) {
+    return calculatePartXYZ(t, right, left);
+  }
+
+
+  @override
+  String getAnimationType() {
+    return animationType();
+  }
+
+}
+
 
 /// [TransitionAnimationGroup] can do transition Animation
 class TransitionAnimationGroup extends AbsAnimationGroup {
@@ -163,6 +210,11 @@ class TransitionAnimationGroup extends AbsAnimationGroup {
   @override
   Vector3 _initXYZ() {
     return Vector3.all(0.0);
+  }
+
+  @override
+  String getAnimationType() {
+     return "TransitionAnimationGroup";
   }
 }
 
@@ -186,6 +238,13 @@ class ScaleAnimationGroup extends AbsAnimationGroup {
   Vector3 _initXYZ() {
     return Vector3.all(1.0);
   }
+
+  @override
+  String getAnimationType() {
+    return "ScaleAnimationGroup";
+  }
+
+
 }
 
 /// [RotationAnimationGroup] can do rotation Animation
@@ -214,6 +273,11 @@ class RotationAnimationGroup extends AbsAnimationGroup {
   Vector3 _initXYZ() {
     return Vector3.all(0.0);
   }
+
+  @override
+  String getAnimationType() {
+    return "RotationAnimationGroup";
+  }
 }
 
 /// [OpacityAnimationGroup] can do opacity Animation
@@ -235,5 +299,10 @@ class OpacityAnimationGroup extends AbsAnimationGroup {
   @override
   Matrix4 _last(Matrix4 matrix4) {
     return matrix4..setEntry(0, 0, _currentXYZ.x);
+  }
+
+  @override
+  String getAnimationType() {
+    return "OpacityAnimationGroup";
   }
 }

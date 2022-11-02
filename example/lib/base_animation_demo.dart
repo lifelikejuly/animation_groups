@@ -2,15 +2,16 @@ import 'dart:math';
 
 import 'package:animation_groups/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:vector_math/vector_math_64.dart' hide Colors;
 
-class AnimationDemo extends StatefulWidget {
-  const AnimationDemo({Key? key}) : super(key: key);
+class BaseAnimationDemo extends StatefulWidget {
+  const BaseAnimationDemo({Key? key}) : super(key: key);
 
   @override
-  State<AnimationDemo> createState() => _AnimationDemoState();
+  State<BaseAnimationDemo> createState() => _AnimationDemoState();
 }
 
-class _AnimationDemoState extends State<AnimationDemo> {
+class _AnimationDemoState extends State<BaseAnimationDemo> {
   AnimationDriver animationDriver = AnimationDriver();
 
   bool _repeat = false;
@@ -30,42 +31,20 @@ class _AnimationDemoState extends State<AnimationDemo> {
       body: Stack(
         children: [
           Positioned(
-            top: 0,
-            left: 0,
+            top: 200,
+            left: 200,
             child: AnimationGroupWidget(
               animationDriver: animationDriver,
               animationGroups: [
-                TransitionAnimationGroup(parts: [
-                  AnimationPart(moment: 0),
-                  AnimationPart(
-                      moment: 1000, x: 100, y: 100, curve: Curves.easeIn),
-                  AnimationPart(moment: 2000, y: 200, curve: Curves.easeIn),
-                  AnimationPart(moment: 3000, x: 200),
-                  AnimationPart(moment: 4000, x: 300, y: 300),
-                ]),
-                TransitionAnimationGroup(parts: [
-                  AnimationPart(moment: 5000, x: 300, y: 300),
-                  AnimationPart(moment: 6000, x: 200, y: 200),
-                  AnimationPart.add(moment: 7000,x: -300),
-                ]),
-                ScaleAnimationGroup(parts: [
-                  AnimationPart(moment: 1000),
-                  AnimationPart(
-                      moment: 2000, x: 1.5, y: 1.5, curve: Curves.easeIn),
-                  AnimationPart(moment: 3000, x: 1.0, y: 1.0),
-                ]),
-                ScaleAnimationGroup(parts: [
-                  AnimationPart(moment: 4000, curve: Curves.bounceIn),
-                  AnimationPart(moment: 5000, x: 2.0, y: 2.0),
-                ]),
                 RotationAnimationGroup(parts: [
-                  AnimationPart(moment: 4000),
-                  AnimationPart(moment: 5000, z: pi),
+                  AnimationPart(moment: 0),
+                  AnimationPart(moment: 1000, x: pi, z: pi),
+                  AnimationPart(moment: 2000, x: 2 * pi),
                 ]),
-                OpacityAnimationGroup(parts: [
-                  AnimationPart(moment: 1000),
-                  AnimationPart(moment: 2000,x: 0.5),
-                  AnimationPart(moment: 3000,x: 1.0),
+                TransitionAnimationGroup(parts: [
+                  AnimationPart(moment: 0, x: 100, y: 100),
+                  AnimationPart.add(
+                      moment: 1000, x: -200, y: -200, curve: Curves.easeIn),
                 ])
               ],
               child: Container(

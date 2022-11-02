@@ -1,5 +1,7 @@
-import 'package:example/demo.dart';
 import 'package:flutter/material.dart';
+
+import 'base_animation_demo.dart';
+import 'expand_animation_demo.dart';
 
 void main() {
   runApp(const MyApp());
@@ -56,21 +58,55 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            GestureDetector(
-              child: const Text(
-                'touch into the demo',
-              ),
-              onTap: () {
+        child: ListView(
+          children: [
+            ListTile(
+              title: const Text("基础动画"),
+              onTap: (){
                 Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                  return const AnimationDemo();
+                  return const BaseAnimationDemo();
                 }));
               },
-            )
+            ),
+            ListTile(
+              title: const Text("拓展动画"),
+              onTap: (){
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                  return const ExpandAnimationDemo();
+                }));
+              },
+            ),
+            // Column(
+            //   mainAxisAlignment: MainAxisAlignment.center,
+            //   children: <Widget>[
+            //     Column(
+            //       children: [
+            //         GestureDetector(
+            //           child: const Text(
+            //             'touch into the demo',
+            //           ),
+            //           onTap: () {
+            //             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+            //               return const AnimationDemo();
+            //             }));
+            //           },
+            //         ),
+            //         GestureDetector(
+            //           child: const Text(
+            //             'touch into the demo',
+            //           ),
+            //           onTap: () {
+            //             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+            //               return const AnimationDemo2();
+            //             }));
+            //           },
+            //         )
+            //       ],
+            //     )
+            //   ],
+            // ),
           ],
-        ),
+        )
       ),
     );
   }

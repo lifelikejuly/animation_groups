@@ -8,12 +8,16 @@ import '../parameter/animation_group.dart';
 class AnimationManager {
   List<AbsAnimationGroup> animationGroups = List.empty(growable: true);
   List<AbsAnimationGroup> opacityGroups = List.empty(growable: true);
-  late Duration duration;
   Matrix4 matrix4 = Matrix4.identity();
+  List<String> animationTypes = List.empty(growable: true);
+
+  late Duration duration;
 
   AnimationManager(List<AbsAnimationGroup> groups) {
     int maxDuration = 0;
     for (AbsAnimationGroup group in groups) {
+      if(animationTypes.contains(group.getAnimationType())) continue;
+      animationTypes.add(group.getAnimationType());
       maxDuration = max(group.duration, maxDuration);
       if(group is OpacityAnimationGroup){
         opacityGroups.add(group);
