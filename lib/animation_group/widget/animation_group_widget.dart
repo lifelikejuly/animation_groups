@@ -61,7 +61,6 @@ class _AnimationGroupWidgetState extends State<AnimationGroupWidget>
     voidCallback = (){
       double value = _animationController.value;
       if(value == 1.0 && !animationDriver.isReverse){
-
         if (animationDriver.isRepeat) {
           animationDriver.forwardFunc!();
         }
@@ -88,10 +87,13 @@ class _AnimationGroupWidgetState extends State<AnimationGroupWidget>
       animation: _animationController,
       child: widget.child,
       builder: (context, child) {
+        Matrix4 matrix4 = _animationManager.calculateMatrix(_getMilliseconds());
+        double opacity =  _animationManager.calculateOpacity(_getMilliseconds());
+        animationDriver.inputCurrentMatrixValue(matrix4);
         return Opacity(
-          opacity: _animationManager.calculateOpacity(_getMilliseconds()),
+          opacity: opacity,
           child: Transform(
-            transform: _animationManager.calculateMatrix(_getMilliseconds()),
+            transform: matrix4,
             alignment: Alignment.center,
             child: child,
           ),

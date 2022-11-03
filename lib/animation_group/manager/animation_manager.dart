@@ -16,7 +16,9 @@ class AnimationManager {
   AnimationManager(List<AbsAnimationGroup> groups) {
     int maxDuration = 0;
     for (AbsAnimationGroup group in groups) {
-      if(animationTypes.contains(group.getAnimationType())) continue;
+      if(animationTypes.contains(group.getAnimationType())){
+        throw Exception("any different animationType can only attach once.Please checkout not repeat animationType.");
+      }
       animationTypes.add(group.getAnimationType());
       maxDuration = max(group.duration, maxDuration);
       if(group is OpacityAnimationGroup){

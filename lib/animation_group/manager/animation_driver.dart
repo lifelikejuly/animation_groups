@@ -1,3 +1,9 @@
+import 'package:vector_math/vector_math_64.dart';
+
+
+typedef AnimationListener = Function(Matrix4 matrix4);
+
+
 ///
 class AnimationDriver {
   double? _from;
@@ -5,6 +11,7 @@ class AnimationDriver {
   bool _isInitForwardDriver = false;
   bool _isReverse = false;
   bool isRepeat = false;
+  final List<AnimationListener> _listenerList = List.empty(growable: true);
 
   Function? reverseFunc;
   Function? forwardFunc;
@@ -17,6 +24,8 @@ class AnimationDriver {
   bool get isInitForwardDriver => _isInitForwardDriver;
 
   bool get isReverse => _isReverse;
+
+
 
   AnimationDriver();
 
@@ -54,5 +63,18 @@ class AnimationDriver {
     if (resetFunc != null) {
       resetFunc!();
     }
+  }
+
+  void inputCurrentMatrixValue(Matrix4 matrix4) {
+    for(AnimationListener listener in _listenerList){
+      listener(matrix4);
+    }
+  }
+
+  void addListener(AnimationListener listener){
+    if(!_listenerList.contains(listener)) _listenerList.add(listener);
+  }
+  void removeListener(AnimationListener listener){
+     _listenerList.remove(listener);
   }
 }
