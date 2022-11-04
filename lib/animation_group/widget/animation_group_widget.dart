@@ -75,6 +75,15 @@ class _AnimationGroupWidgetState extends State<AnimationGroupWidget>
   }
 
   @override
+  void didUpdateWidget(covariant AnimationGroupWidget oldWidget) {
+    if(oldWidget.animationGroups != widget.animationGroups){
+      _animationManager = AnimationManager(widget.animationGroups);
+      _animationController = AnimationController(vsync: this);
+      _animationController.duration = _animationManager.duration;
+    }
+  }
+
+  @override
   void dispose() {
     _animationController.removeListener(voidCallback);
     _animationController.dispose();

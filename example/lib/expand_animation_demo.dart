@@ -20,10 +20,43 @@ class _AnimationDemoState2 extends State<ExpandAnimationDemo>
 
   bool _repeat = false;
 
+  final List<AbsAnimationGroup> animationGroupA = [
+    WaveAnimationGroup(parts: [
+      AnimationPart(moment: 0, x: 200, y: 300),
+      AnimationPart(moment: 5000, x: 300),
+    ]),
+  ];
+
+  final List<AbsAnimationGroup> animationGroupB = [
+    CircleTransitionAnimationGroup(parts: [
+      AnimationPart(moment: 0, x: 200, y: 200),
+      AnimationPart(moment: 5000, x: 200, y: 200),
+    ]),
+  ];
+
+  late List<AbsAnimationGroup> selected;
+
+  int _radioGroupA = 0;
+
+  void _handleRadioValueChanged(int? value) {
+    switch(value){
+      case 0:
+        selected = animationGroupA;
+        break;
+      case 1:
+        selected = animationGroupB;
+        break;
+    }
+    setState(() {
+      _radioGroupA = value ?? 0;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     // animationDriver.reverse(from: 1.0);
+    selected = animationGroupA;
   }
 
   @override
@@ -40,30 +73,7 @@ class _AnimationDemoState2 extends State<ExpandAnimationDemo>
             left: 0,
             child: AnimationGroupWidget(
               animationDriver: animationDriver,
-              animationGroups: [
-                // TransitionAnimationGroup(parts: [
-                //   AnimationPart(moment: 0),
-                //   AnimationPart.add(moment: 2000,x: 100),
-                //   AnimationPart.add(moment: 4000,y: 100),
-                //   AnimationPart.add(moment: 5000,y: 200,x: 200),
-                // ]),
-
-                CircleTransitionAnimationGroup(parts: [
-                  AnimationPart(moment: 0, x: 200, y: 200),
-                  AnimationPart(moment: 5000, x: 200, y: 200),
-                ]),
-
-                // WaveAnimationGroup(parts: [
-                //   AnimationPart(moment: 0,x: 200, y: 300),
-                //   AnimationPart(moment: 5000,x: 300),
-                // ]),
-
-                // XTransitionAnimationGroup(parts: [
-                //   AnimationPart(moment: 0,x: 100, y: 100),
-                //   AnimationPart(
-                //       moment: 1000, x: 300, y: 400, curve: Curves.easeIn),
-                // ])
-              ],
+              animationGroups: selected,
               child: Container(
                 child: const Text("xxxxx"),
                 width: 20,
@@ -74,25 +84,49 @@ class _AnimationDemoState2 extends State<ExpandAnimationDemo>
           ),
           Positioned(
               bottom: 0,
-              child: Row(
+              child: Column(
                 children: [
-                  TextButton(
-                      onPressed: () {
-                        animationDriver.forward(from: 0);
-                      },
-                      child: const Text("toForward")),
-                  TextButton(
-                      onPressed: () {
-                        animationDriver.reverse(from: 1.0);
-                      },
-                      child: const Text("toReverse")),
-                  Switch(
-                      value: _repeat,
-                      onChanged: (newValue) {
-                        _repeat = !_repeat;
-                        animationDriver.isRepeat = _repeat;
-                        setState(() {});
-                      }),
+                  Row(
+                    children: [
+                      Radio(
+                        value: 0,
+                        // tileColor: Colors.white,
+                        groupValue: _radioGroupA,
+                        onChanged: _handleRadioValueChanged,
+                        // title:Text('Option A') ,
+                        // selected: _radioGroupA == 0,
+                      ),
+                      Radio(
+                        value: 1,
+                        // tileColor: Colors.white,
+                        groupValue: _radioGroupA,
+                        onChanged: _handleRadioValueChanged,
+                        // title:Text('Option B') ,
+                        // selected: _radioGroupA == 1,
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      TextButton(
+                          onPressed: () {
+                            animationDriver.forward(from: 0);
+                          },
+                          child: const Text("toForward")),
+                      TextButton(
+                          onPressed: () {
+                            animationDriver.reverse(from: 1.0);
+                          },
+                          child: const Text("toReverse")),
+                      Switch(
+                          value: _repeat,
+                          onChanged: (newValue) {
+                            _repeat = !_repeat;
+                            animationDriver.isRepeat = _repeat;
+                            setState(() {});
+                          }),
+                    ],
+                  )
                 ],
               )),
         ],
@@ -220,19 +254,15 @@ class CircleTransitionAnimationGroup extends AnimationGroup {
     // p2( c ,b)
     // p3( a ,0)
 
-
     // p0( 0 ,a)
     // p1( -b ,c)
     // p2( -c ,b)
     // p3( -a ,0)
 
-
-
     // p0( 0 ,-a)
     // p1( b ,-c)
     // p2( c ,-b)
     // p3( a ,0)
-
 
     const double a = 1.00005519 * 100;
     const double b = 0.55342686 * 100;
@@ -241,29 +271,30 @@ class CircleTransitionAnimationGroup extends AnimationGroup {
     double per = 0;
     double xPN = 1;
     double yPN = 1;
-    if(allPer <= 0.25){
+    if (allPer <= 0.25) {
       per = allPer * 4.0;
-    }else if(allPer <= 0.5){
+    } else if (allPer <= 0.5) {
       per = 1 - (allPer - 0.25) * 4.0;
       yPN = -1;
-    }else if(allPer <= 0.75){
+    } else if (allPer <= 0.75) {
       per = (allPer - 0.5) * 4.0;
       xPN = -1;
       yPN = -1;
-    }else{
+    } else {
       per = 1 - (allPer - 0.75) * 4.0;
       xPN = -1;
     }
 
     // per *= 2;
-    double x = xPN * (3 * b * pow((1 - per), 2) * per + // p1
-        3 * c * (1 - per) * pow(per, 2) + // p2
-        a * pow(per, 3)); // p3
+    double x = xPN *
+        (3 * b * pow((1 - per), 2) * per + // p1
+            3 * c * (1 - per) * pow(per, 2) + // p2
+            a * pow(per, 3)); // p3
 
-    double y = yPN * (a * pow(1 - per, 3) + // p0
-        3 * c * pow(1 - per, 2) * per + // p1
-        3 * b * (1 - per) * pow(per, 2)); // p2
-
+    double y = yPN *
+        (a * pow(1 - per, 3) + // p0
+            3 * c * pow(1 - per, 2) * per + // p1
+            3 * b * (1 - per) * pow(per, 2)); // p2
 
     // x = -x;
     // y = -y;
